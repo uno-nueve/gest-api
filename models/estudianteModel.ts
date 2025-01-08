@@ -1,6 +1,6 @@
 import { model, Schema } from "mongoose";
 
-interface IEstudiante {
+export interface IEstudiante {
     nombre: string;
     apellido: string;
     email: string;
@@ -25,4 +25,5 @@ const estudianteSchema = new Schema<IEstudiante>({
     ],
 });
 
-export const Estudiante = model("estudiantes", estudianteSchema);
+const Estudiante = model<IEstudiante>("estudiantes", estudianteSchema);
+export { Estudiante };

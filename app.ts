@@ -2,6 +2,7 @@ import "dotenv/config";
 import express from "express";
 import cors, { CorsOptions } from "cors";
 import connectDB from "./config/db";
+import estudiantesRouter from "./routes/estudiantes";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -12,6 +13,7 @@ const corsOptions: CorsOptions = {
 
 app.use(express.json());
 app.use(cors(corsOptions));
+app.use("/api", estudiantesRouter);
 
 app.get("/", (req, res) => {
     res.send("Hello world");
