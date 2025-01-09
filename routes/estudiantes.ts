@@ -5,12 +5,33 @@ import { HydratedDocument } from "mongoose";
 const router = Router();
 
 router.get("/estudiantes", async (req, res) => {
-    try {
-        const estudiantes = await Estudiante.find();
+    const { curso } = req.query;
+    if (!curso) {
+        try {
+            const estudiantes = await Estudiante.find();
 
-        res.status(200).send(estudiantes);
+            res.status(200).send(estudiantes);
+        } catch (error) {
+            res.status(500).send({
+                message: "❌ Error obteniendo registros de estudiantes",
+                error,
+            });
+        }
+        return;
+    }
+
+    try {
+        const filtro = curso ? { cursos: { $in: [curso] } } : {};
+        const estudiantesFiltrados = await Estudiante.find(filtro);
+
+        if (!estudiantesFiltrados)
+            return res.status(404).send({
+                message: "⚠️ No se encontraron registros que coincidan con el criterio de busqueda",
+            });
+
+        res.status(200).send(estudiantesFiltrados);
     } catch (error) {
-        res.status(500).send({ message: "❌ Error obteniendo registros de estudiantes", error });
+        res.status(500).send({ message: "❌ Error filtrando registros", error });
     }
 });
 
