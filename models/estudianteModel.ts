@@ -1,10 +1,11 @@
-import { model, Schema } from "mongoose";
+import { model, Schema, Types } from "mongoose";
 
 export interface IEstudiante {
     nombre: string;
     apellido: string;
     email: string;
     cursos: string[];
+    imagen?: Types.ObjectId;
 }
 
 const estudianteSchema = new Schema<IEstudiante>({
@@ -32,6 +33,10 @@ const estudianteSchema = new Schema<IEstudiante>({
             required: true,
         },
     ],
+    imagen: {
+        type: Types.ObjectId,
+        ref: "imagenes",
+    },
 });
 
 const Estudiante = model<IEstudiante>("estudiantes", estudianteSchema);
