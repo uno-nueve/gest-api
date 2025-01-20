@@ -2,8 +2,11 @@ import { Router } from "express";
 import { Estudiante, IEstudiante } from "../models/estudianteModel";
 import { HydratedDocument } from "mongoose";
 import { Imagen } from "../models/imagenModel";
+import multer from "multer";
 
 const router = Router();
+// middleware para manejo de subida de archivos.
+const upload = multer();
 
 // Obtener todos los registros de estudiantes.
 router.get("/estudiantes", async (req, res) => {
@@ -42,7 +45,7 @@ router.get("/estudiantes", async (req, res) => {
 // Obtener un registro por ID.
 router.get("/estudiantes/:id", async (req, res) => {
     try {
-        const estudiante = await Estudiante.findById(req.params.id).populate({ path: "imagenes" });
+        const estudiante = await Estudiante.findById(req.params.id).populate({ path: "imagen" });
 
         if (!estudiante) return res.status(404).send("⚠️ Registro no encontrado");
 
@@ -103,8 +106,8 @@ router.delete("/estudiantes/:id", async (req, res) => {
 });
 
 // Actualizar el valor de "imagen" en un registro de estudiante por ID.
-// La request acepta binaries.
-router.patch("/estudiantes/:id/avatar", async (req, res) => {
+// La request requiere de un campo "imagen" en un formulario.
+router.patch("/estudiantes/:id/avatar", upload.single("imagen"), async (req, res) => {
     try {
         // Encuentra el estudiante.
         const estudiante = await Estudiante.findById(req.params.id);
@@ -113,17 +116,20 @@ router.patch("/estudiantes/:id/avatar", async (req, res) => {
             return res.status(404).send({ message: "⚠️ Registro no encontrado" });
         }
 
-        // Enlaza un event handler a un evento "data" en la request.
-        req.on("data", async (data) => {
-            // Construye un buffer basado en la "data" de la request.
-            const buffer = Buffer.from(data).toString("base64");
-            // Crea un registro de imagen.
-            const imagen = await Imagen.create({ data: buffer });
-            // Asigna el registro creado al registro de estudiante.
-            estudiante.imagen = imagen._id;
-        });
-        // Guarda los cambios en Mongo.
-        req.on("end", async () => await estudiante.save());
+        // Obtiene el buffer de datos del archivo.
+        const buffer = req.file?.buffer;
+
+        if (!buffer) {
+            return res.status(400).send({ message: "⚠️ Imágen no válida" });
+        }
+
+        // Crea una imágen con los datos del buffer.
+        const imagen = await Imagen.create({ data: buffer.toString("base64") });
+        // Asigna el valor "_id" de la imágen creada.
+        estudiante.imagen = imagen._id;
+        estudiante.validateSync();
+        // Guarda los cambios en el registro de estudiante.
+        estudiante.save();
 
         res.status(201).send({ message: "✅ Imagen subida exitosamente", estudiante });
     } catch (error) {
