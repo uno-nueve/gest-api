@@ -1,4 +1,4 @@
-# 🧑‍🎓 API de Gestión Estudiantil
+# 🧑‍🎓*GEst: API de Gestión Estudiantil*
 
 API sencilla para gestionar el registro de estudiantes. Construída con **Express** y **MongoDB**.
 
@@ -8,13 +8,54 @@ API sencilla para gestionar el registro de estudiantes. Construída con **Expres
 -   Soporte para filtros de búsqueda: Filtra estudiantes por curso.
 -   Carga de imágenes de perfil para estudiantes.
 
-## Acceso
+## Tecnologías usadas
+
+-   Node.js con Express
+-   MongoDB con Mongoose
+-   Multer
+-   Typescript
+
+## Uso
+
+1. Clonar el repositorio.
+
+```bash
+git clone git@github.com:uno-nueve/gest-api.git
+cd gest-api
+```
+
+2. Instalar dependencias.
+
+```bash
+npm install
+```
+
+3. Configurar variables de entorno en archivo `.env`.
+
+```bash
+MONGO_URI= tu_string_de_conexion
+```
+
+4. Ejecutar el servidor
+
+```bash
+npm run dev
+```
 
 **Link a la API desplegada en Vercel:** https://gest-api.vercel.app/
 
 ## Endpoints
 
-### Estudiantes
+| Método     | Endpoint              | Descripción                                                                  |
+| ---------- | --------------------- | ---------------------------------------------------------------------------- |
+| **GET**    | `api/estudiantes`     | Obtiene todos los estudiantes. Si se añade un filtro, solo los que coincidan |
+| **GET**    | `api/estudiantes/:id` | Obtiene un estudiante por ID                                                 |
+| **POST**   | `api/estudiantes`     | Crea un estudiante                                                           |
+| **PUT**    | `api/estudiantes/:id` | Actualiza un estudiante por ID                                               |
+| **DELETE** | `api/estudiantes`     | Elimina un estudiante por ID                                                 |
+| **PATCH**  | `api/estudiantes`     | Añade una imágen de perfil a un estudiante                                   |
+
+### Ejemplos de uso
 
 **Obtener todos los estudiantes**
 
@@ -135,9 +176,12 @@ API sencilla para gestionar el registro de estudiantes. Construída con **Expres
 }
 ```
 
-## Tecnologías usadas
+## Próximos pasos
 
--   Node.js con Express
--   MongoDB con Mongoose
--   Multer
--   Typescript
+-   Integrar autenticación de usuarios.
+-   Integrar servicio de almacenamiento en la nube e.g. [uploadthing](https://uploadthing.com/).
+-   Crear interfaz de usuario con React.
+
+## Créditos
+
+**Desarrollado por Luciano Montilla**
