@@ -1,5 +1,5 @@
 import "dotenv/config";
-import express from "express";
+import express, { urlencoded } from "express";
 import cors, { CorsOptions } from "cors";
 import connectDB from "./config/db";
 import estudiantesRouter from "./routes/estudiantes";
@@ -12,6 +12,7 @@ const corsOptions: CorsOptions = {
 };
 
 app.use(express.json());
+app.use(urlencoded({ extended: true }));
 app.use(cors(corsOptions));
 app.use("/api", estudiantesRouter);
 
