@@ -14,7 +14,7 @@ router.get("/estudiantes", async (req, res) => {
     // Si no existe un parámetro de filtro, devuelve todos los registros.
     if (!curso) {
         try {
-            const estudiantes = await Estudiante.find();
+            const estudiantes = await Estudiante.find().populate({ path: "imagen" });
 
             res.status(200).send(estudiantes);
         } catch (error) {
@@ -28,7 +28,7 @@ router.get("/estudiantes", async (req, res) => {
 
     // Devuelve los registros cuyo valor para "cursos" coincida con el parámetro de filtro.
     try {
-        const filtro = curso ? { cursos: { $in: [curso] } } : {};
+        const filtro = curso ? { "cursos.curso": { $in: [curso] } } : {};
         const estudiantesFiltrados = await Estudiante.find(filtro);
 
         if (!estudiantesFiltrados)
@@ -56,16 +56,27 @@ router.get("/estudiantes/:id", async (req, res) => {
 });
 
 // Crear un nuevo registro de estudiante.
-router.post("/estudiantes", async (req, res) => {
+router.post("/estudiantes", upload.single("imagen"), async (req, res) => {
     try {
-        const { nombre, apellido, email, cursos }: IEstudiante = req.body;
+        const { cursos, ...data }: IEstudiante = req.body;
 
         const nuevoEstudiante: HydratedDocument<IEstudiante> = new Estudiante({
-            nombre,
-            apellido,
-            email,
-            cursos,
+            cursos: JSON.parse(cursos),
+            ...data,
         });
+        // Obtiene el buffer de datos del archivo.
+        const buffer = req.file?.buffer;
+
+        if (!buffer) {
+            return res.status(400).send({ message: "⚠️ Imágen no válida" });
+        }
+
+        // Crea una imágen con los datos del buffer.
+        const imagen = await Imagen.create({ data: buffer.toString("base64") });
+        // Asigna el valor "_id" de la imágen creada.
+        nuevoEstudiante.imagen = imagen._id;
+        // Guarda los cambios en el registro de estudiante.
+
         await nuevoEstudiante.save();
 
         res.status(201).send(nuevoEstudiante);
