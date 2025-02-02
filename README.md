@@ -46,14 +46,14 @@ npm run dev
 
 ## Endpoints
 
-| Método     | Endpoint              | Descripción                                                                  |
-| ---------- | --------------------- | ---------------------------------------------------------------------------- |
-| **GET**    | `api/estudiantes`     | Obtiene todos los estudiantes. Si se añade un filtro, solo los que coincidan |
-| **GET**    | `api/estudiantes/:id` | Obtiene un estudiante por ID                                                 |
-| **POST**   | `api/estudiantes`     | Crea un estudiante                                                           |
-| **PUT**    | `api/estudiantes/:id` | Actualiza un estudiante por ID                                               |
-| **DELETE** | `api/estudiantes`     | Elimina un estudiante por ID                                                 |
-| **PATCH**  | `api/estudiantes`     | Añade una imágen de perfil a un estudiante                                   |
+| Método     | Endpoint                     | Descripción                                                                  |
+| ---------- | ---------------------------- | ---------------------------------------------------------------------------- |
+| **GET**    | `api/estudiantes`            | Obtiene todos los estudiantes. Si se añade un filtro, solo los que coincidan |
+| **GET**    | `api/estudiantes/:id`        | Obtiene un estudiante por ID                                                 |
+| **POST**   | `api/estudiantes`            | Crea un estudiante                                                           |
+| **PUT**    | `api/estudiantes/:id`        | Actualiza un estudiante por ID                                               |
+| **DELETE** | `api/estudiantes`            | Elimina un estudiante por ID                                                 |
+| **PATCH**  | `api/estudiantes/:id/avatar` | Añade una imágen de perfil a un estudiante                                   |
 
 ### Ejemplos de uso
 
@@ -178,9 +178,19 @@ npm run dev
 
 ## Próximos pasos
 
--   Integrar autenticación de usuarios.
+-   ✅ Integrar autenticación de usuarios.
 -   Integrar servicio de almacenamiento en la nube e.g. [uploadthing](https://uploadthing.com/).
--   Crear interfaz de usuario con React.
+-   ✅ Crear interfaz de usuario con React.
+
+## Notas
+
+### Actualización 2/2/2024:
+
+1.  Modelo de Estudiante actualizado para admitir más datos y un nuevo formato de curso.
+2.  `GET /api/estudiantes` ahora devuelve la imagen asociada a los alumnos.
+3.  Filtro en `GET /api/estudiantes` actualizado para filtrar correctamente según el nuevo modelo.
+4.  `POST /api/estudiantes` ahora acepta una imágen para crear el registro de usuario.
+5.  Autenticación de usuarios integrada en la [interfaz de usuarios de React](https://github.com/uno-nueve/gest).
 
 ## Créditos
 

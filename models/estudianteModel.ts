@@ -4,7 +4,13 @@ export interface IEstudiante {
     nombre: string;
     apellido: string;
     email: string;
-    cursos: string[];
+    direccion: string;
+    tutor: string;
+    telefono: string;
+    grado: string;
+    docente: string;
+    cursos: { curso: string; nota: number }[];
+    observaciones: string;
     imagen?: Types.ObjectId;
 }
 
@@ -23,16 +29,55 @@ const estudianteSchema = new Schema<IEstudiante>({
         unique: true,
         match: [/^\S+@\S+\.\S+$/, "⚠️ Formato de email inválido"],
     },
+    direccion: {
+        type: String,
+        required: true,
+        match: [/^[A-Za-z\s]+(?:\d+)?[A-Za-z0-9\s,.]+$/, "⚠️ Formato de dirección inválido"],
+    },
+    tutor: {
+        type: String,
+        required: [true, "⚠️ Tutor es un campo requerido"],
+    },
+    telefono: {
+        type: String,
+        required: [true, "⚠️ Teléfono es un campo requerido"],
+    },
+    grado: {
+        type: String,
+        required: [true, "⚠️ Año es un campo requerido"],
+    },
+    docente: {
+        type: String,
+        required: [true, "⚠️ Docente es un campo requerido"],
+    },
     cursos: [
         {
-            type: String,
-            enum: {
-                values: ["Matemática", "Historia", "Ciencias", "Arte"],
-                message: "⚠️ {VALUE} no es un valor permitido",
+            curso: {
+                type: String,
+                enum: {
+                    values: [
+                        "Matemática",
+                        "Historia",
+                        "Biología",
+                        "Arte",
+                        "Lengua",
+                        "Educación Física",
+                        "Física",
+                        "Química",
+                        "Inglés",
+                    ],
+                    message: "⚠️ {VALUE} no es un valor permitido",
+                },
+                required: true,
             },
-            required: true,
+            nota: {
+                type: Number,
+            },
         },
     ],
+    observaciones: {
+        type: String,
+    },
     imagen: {
         type: Types.ObjectId,
         ref: "imagenes",
